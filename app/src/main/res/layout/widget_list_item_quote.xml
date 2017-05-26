@@ -8,8 +8,10 @@
     android:orientation="horizontal"
     android:paddingLeft="@dimen/widget_margin"
     android:paddingRight="@dimen/widget_margin"
-    android:paddingTop="@dimen/widget_content_margin"
-    android:paddingBottom="@dimen/widget_content_margin">
+    android:paddingStart="@dimen/widget_margin"
+    android:paddingEnd="@dimen/widget_margin"
+    android:paddingTop="@dimen/small_content_margin"
+    android:paddingBottom="@dimen/small_content_margin">
 
     <TextView
         android:id="@+id/tv_symbol"
@@ -31,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/widget_margin"
-            tools:text="1000.00" />
+            tools:text="@string/sample_price" />
 
         <TextView
             android:id="@+id/tv_change"
@@ -41,6 +43,8 @@
             android:background="@drawable/percent_change_pill_green"
             android:paddingLeft="@dimen/widget_minimal_margin"
             android:paddingRight="@dimen/widget_minimal_margin"
-            tools:text="100%" />
+            android:paddingStart="@dimen/widget_minimal_margin"
+            android:paddingEnd="@dimen/widget_minimal_margin"
+            tools:text="@string/sample_change" />
     </LinearLayout>
 </LinearLayout>

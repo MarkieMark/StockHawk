@@ -1,6 +1,5 @@
 package com.halloit.stockhawk.ui;
 
-
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
@@ -12,10 +11,7 @@ import android.widget.TextView;
 import com.halloit.stockhawk.R;
 import com.halloit.stockhawk.data.Contract;
 import com.halloit.stockhawk.data.PrefUtils;
-
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.Locale;
+import com.halloit.stockhawk.widget.WidgetDataProvider;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,28 +19,18 @@ import butterknife.ButterKnife;
 class StockAdapter extends RecyclerView.Adapter<StockAdapter.StockViewHolder> {
 
     private final Context context;
-    private final DecimalFormat dollarFormatWithPlus;
-    private final DecimalFormat dollarFormat;
-    private final DecimalFormat percentageFormat;
     private Cursor cursor;
     private final StockAdapterOnClickHandler clickHandler;
 
     StockAdapter(Context context, StockAdapterOnClickHandler clickHandler) {
         this.context = context;
         this.clickHandler = clickHandler;
-
-        dollarFormat = (DecimalFormat) NumberFormat.getCurrencyInstance(Locale.US);
-        dollarFormatWithPlus = (DecimalFormat) NumberFormat.getCurrencyInstance(Locale.US);
-        dollarFormatWithPlus.setPositivePrefix("+$");
-        percentageFormat = (DecimalFormat) NumberFormat.getPercentInstance(Locale.getDefault());
-        percentageFormat.setMaximumFractionDigits(2);
-        percentageFormat.setMinimumFractionDigits(2);
-        percentageFormat.setPositivePrefix("+");
     }
 
     void setCursor(Cursor cursor) {
         this.cursor = cursor;
         notifyDataSetChanged();
+        WidgetDataProvider.notifyDataSetChanged(context);
     }
 
     String getSymbolAtPosition(int position) {
@@ -66,10 +52,10 @@ class StockAdapter extends RecyclerView.Adapter<StockAdapter.StockViewHolder> {
 
         cursor.moveToPosition(position);
 
-
+        PrefUtils prefUtils = PrefUtils.getSingleton();
         holder.tv_symbol.setText(cursor.getString(Contract.Quote.POSITION_SYMBOL));
-        holder.tv_price.setText(dollarFormat.format(cursor.getFloat(Contract.Quote.POSITION_PRICE)));
-
+        holder.tv_price.setText(prefUtils.dollarFormatFormat(
+                cursor.getFloat(Contract.Quote.POSITION_PRICE)));
 
         float rawAbsoluteChange = cursor.getFloat(Contract.Quote.POSITION_ABSOLUTE_CHANGE);
         float percentageChange = cursor.getFloat(Contract.Quote.POSITION_PERCENTAGE_CHANGE);
@@ -80,17 +66,15 @@ class StockAdapter extends RecyclerView.Adapter<StockAdapter.StockViewHolder> {
             holder.tv_change.setBackgroundResource(R.drawable.percent_change_pill_red);
         }
 
-        String change = dollarFormatWithPlus.format(rawAbsoluteChange);
-        String percentage = percentageFormat.format(percentageChange / 100);
+        String change = prefUtils.dollarFormatWithPlusFormat(rawAbsoluteChange);
+        String percentage = prefUtils.percentageFormatFormat(percentageChange / 100);
 
-        if (PrefUtils.getDisplayMode(context)
-                .equals(context.getString(R.string.pref_display_mode_absolute_key))) {
+        if (context.getString(R.string.pref_display_mode_absolute_key)
+                .equals(PrefUtils.getDisplayMode(context))) {
             holder.tv_change.setText(change);
         } else {
             holder.tv_change.setText(percentage);
         }
-
-
     }
 
     @Override

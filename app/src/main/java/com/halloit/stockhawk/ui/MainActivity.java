@@ -24,6 +24,7 @@ import com.halloit.stockhawk.R;
 import com.halloit.stockhawk.data.Contract;
 import com.halloit.stockhawk.data.PrefUtils;
 import com.halloit.stockhawk.sync.QuoteSyncJob;
+import com.halloit.stockhawk.widget.WidgetDataProvider;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -162,8 +163,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
 
     private void setDisplayModeMenuItemIcon(MenuItem item) {
-        if (PrefUtils.getDisplayMode(this)
-                .equals(getString(R.string.pref_display_mode_absolute_key))) {
+        if (getString(R.string.pref_display_mode_absolute_key)
+                .equals(PrefUtils.getDisplayMode(this))) {
             item.setIcon(R.drawable.ic_percentage);
         } else {
             item.setIcon(R.drawable.ic_dollar);
@@ -175,6 +176,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         getMenuInflater().inflate(R.menu.main_activity_settings, menu);
         MenuItem item = menu.findItem(R.id.action_change_units);
         setDisplayModeMenuItemIcon(item);
+
         return true;
     }
 
@@ -186,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             PrefUtils.toggleDisplayMode(this);
             setDisplayModeMenuItemIcon(item);
             adapter.notifyDataSetChanged();
-            // TODO notify widgets of change
+            WidgetDataProvider.notifyDataSetChanged(this);
             return true;
         }
         return super.onOptionsItemSelected(item);

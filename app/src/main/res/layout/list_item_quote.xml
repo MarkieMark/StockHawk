@@ -5,8 +5,10 @@
     android:layout_height="?android:attr/listPreferredItemHeight"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp">
+    android:paddingLeft="@dimen/main_large_margin"
+    android:paddingRight="@dimen/main_large_margin"
+    android:paddingStart="@dimen/main_large_margin"
+    android:paddingEnd="@dimen/main_large_margin">
 
     <TextView
         android:id="@+id/tv_symbol"
@@ -27,8 +29,8 @@
             style="@style/BidPriceTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="10sp"
-            tools:text="1000.00" />
+            android:layout_marginEnd="@dimen/layout_font_space"
+            tools:text="@string/sample_price" />
 
         <TextView
             android:id="@+id/tv_change"
@@ -36,8 +38,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/percent_change_pill_green"
-            android:paddingLeft="3dp"
-            android:paddingRight="3dp"
-            tools:text="100%" />
+            android:paddingLeft="@dimen/small_content_margin"
+            android:paddingRight="@dimen/small_content_margin"
+            android:paddingStart="@dimen/small_content_margin"
+            android:paddingEnd="@dimen/small_content_margin"
+            tools:text="@string/sample_change" />
     </LinearLayout>
 </LinearLayout>

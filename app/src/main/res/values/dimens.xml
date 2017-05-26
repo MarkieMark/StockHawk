@@ -1,6 +1,8 @@
 <resources>
-    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="main_large_margin">16dp</dimen>
+    <dimen name="layout_font_space">10sp</dimen>
     <dimen name="widget_margin">6dp</dimen>
-    <dimen name="widget_content_margin">3dp</dimen>
+    <dimen name="small_content_margin">3dp</dimen>
     <dimen name="widget_minimal_margin">1dp</dimen>
+    <dimen name="dialog_content_margin">4dp</dimen>
 </resources>

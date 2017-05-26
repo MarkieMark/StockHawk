@@ -7,7 +7,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:text="@string/some_stock"
+        tools:text="@string/default_stocks_symbol"
         android:gravity="center"
         android:id="@+id/tv_detail_chart_label"/>
     <com.github.mikephil.charting.charts.CandleStickChart

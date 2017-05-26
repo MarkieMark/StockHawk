@@ -6,14 +6,32 @@ import android.preference.PreferenceManager;
 
 import com.halloit.stockhawk.R;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 public final class PrefUtils {
     private static Context c;
+    private static PrefUtils prefUtils = new PrefUtils();
+    private final DecimalFormat dollarFormat = (DecimalFormat)
+            NumberFormat.getCurrencyInstance(Locale.US);
+    private final DecimalFormat percentageFormat = (DecimalFormat)
+            NumberFormat.getPercentInstance(Locale.getDefault());
+    private final DecimalFormat dollarFormatWithPlus = (DecimalFormat)
+            NumberFormat.getCurrencyInstance(Locale.US);
 
     private PrefUtils() {
+        dollarFormatWithPlus.setPositivePrefix("+$");
+        percentageFormat.setMaximumFractionDigits(2);
+        percentageFormat.setMinimumFractionDigits(2);
+        percentageFormat.setPositivePrefix("+");
+    }
+
+    public static PrefUtils getSingleton() {
+        return prefUtils;
     }
 
     public static Set<String> getStocks(Context context) {
@@ -68,6 +86,7 @@ public final class PrefUtils {
 
     public static String getDisplayMode(Context context) {
         if (context == null) context = c;
+        if (context == null) return null;
         String key = context.getString(R.string.pref_display_mode_key);
         String defaultValue = context.getString(R.string.pref_display_mode_default);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -92,5 +111,17 @@ public final class PrefUtils {
             editor.putString(key, absoluteKey);
         }
         editor.apply();
+    }
+
+    public String dollarFormatFormat(float val) {
+        return dollarFormat.format(val);
+    }
+
+    public String dollarFormatWithPlusFormat(float val) {
+        return dollarFormatWithPlus.format(val);
+    }
+
+    public String percentageFormatFormat(float val) {
+        return percentageFormat.format(val);
     }
 }

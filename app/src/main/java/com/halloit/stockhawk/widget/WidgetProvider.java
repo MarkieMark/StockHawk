@@ -11,8 +11,7 @@ import android.os.Build;
 import android.widget.RemoteViews;
 import com.halloit.stockhawk.R;
 import com.halloit.stockhawk.ui.DetailActivity;
-
-import timber.log.Timber;
+import com.halloit.stockhawk.ui.MainActivity;
 
 /**
  * Mark Benjamin 5/24/17.
@@ -31,6 +30,7 @@ public class WidgetProvider extends AppWidgetProvider {
             Intent intent = new Intent(context, WidgetService.class);
             intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
             intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
+            //noinspection deprecation
             view.setRemoteAdapter(appWidgetId, R.id.lv_widget_content, intent);
 
             // set clickability
@@ -38,6 +38,11 @@ public class WidgetProvider extends AppWidgetProvider {
             final PendingIntent onClickPendingIntent = PendingIntent.getActivity(context, 0,
                     onItemClickIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             view.setPendingIntentTemplate(R.id.lv_widget_content, onClickPendingIntent);
+            // click header launches MainActivity
+            final Intent onHeaderClickIntent = new Intent(context, MainActivity.class);
+            final PendingIntent onHeaderClickPendingIntent = PendingIntent.getActivity(context,
+                    1, onHeaderClickIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            view.setOnClickPendingIntent(R.id.tv_widget_header, onHeaderClickPendingIntent);
 
             appWidgetManager.updateAppWidget(appWidgetId, view);
         }

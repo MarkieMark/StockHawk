@@ -8,15 +8,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
 
+import com.halloit.stockhawk.R;
 import com.halloit.stockhawk.data.Contract;
 import com.halloit.stockhawk.data.PrefUtils;
 import com.halloit.stockhawk.mock.MockUtils;
-import com.halloit.stockhawk.widget.UpdateWidgetService;
+import com.halloit.stockhawk.widget.WidgetDataProvider;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -124,8 +124,8 @@ public final class QuoteSyncJob {
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(context, "Error retrieving stock data for " + symbol +
-                                            "\nPlease check the identification of the symbol",
+                            Toast.makeText(context, context.getString(
+                                    R.string.toast_error_symbol_not_found, symbol),
                                     Toast.LENGTH_LONG).show();
                         }
                     });
@@ -141,9 +141,7 @@ public final class QuoteSyncJob {
             Timber.d("bulkInsert " + n);
             Intent dataUpdatedIntent = new Intent(ACTION_DATA_UPDATED);
             context.sendBroadcast(dataUpdatedIntent);
-            // TODO update widgets too
-//            Intent updateWidgetIntent = new Intent(context, UpdateWidgetService.class);
-//            context.startService(updateWidgetIntent);
+            WidgetDataProvider.notifyDataSetChanged(context);
 
         } catch (IOException exception) {
             Timber.e(exception, "Error fetching stock quotes");

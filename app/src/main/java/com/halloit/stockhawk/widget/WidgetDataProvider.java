@@ -1,6 +1,8 @@
 package com.halloit.stockhawk.widget;
 
 import android.annotation.TargetApi;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -9,11 +11,8 @@ import android.os.Build;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import com.halloit.stockhawk.R;
 import com.halloit.stockhawk.data.Contract;
@@ -25,22 +24,12 @@ import com.halloit.stockhawk.ui.DetailActivity;
  */
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-class WidgetDataProvider implements RemoteViewsService.RemoteViewsFactory {
+public class WidgetDataProvider implements RemoteViewsService.RemoteViewsFactory {
     private List<String[]> mCollections = new ArrayList<>();
     private Context context;
-    private final DecimalFormat dollarFormat = (DecimalFormat)
-            NumberFormat.getCurrencyInstance(Locale.US);
-    private final DecimalFormat percentageFormat = (DecimalFormat)
-            NumberFormat.getPercentInstance(Locale.getDefault());
-    private final DecimalFormat dollarFormatWithPlus = (DecimalFormat)
-            NumberFormat.getCurrencyInstance(Locale.US);
 
     WidgetDataProvider(Context c) {
         context = c;
-        dollarFormatWithPlus.setPositivePrefix("+$");
-        percentageFormat.setMaximumFractionDigits(2);
-        percentageFormat.setMinimumFractionDigits(2);
-        percentageFormat.setPositivePrefix("+");
     }
 
     @Override
@@ -65,26 +54,27 @@ class WidgetDataProvider implements RemoteViewsService.RemoteViewsFactory {
 
     @Override
     public RemoteViews getViewAt(int position) {
-        RemoteViews view = new RemoteViews(context.getPackageName(), R.layout.widget_list_item_quote);
+        RemoteViews view = new RemoteViews(context.getPackageName(),
+                R.layout.widget_list_item_quote);
+        PrefUtils prefUtils = PrefUtils.getSingleton();
         view.setTextViewText(R.id.tv_symbol, mCollections.get(position)[0]);
         view.setTextViewText(R.id.tv_price,
-                dollarFormat.format(Float.parseFloat(mCollections.get(position)[1])));
+                prefUtils.dollarFormatFormat(Float.parseFloat(mCollections.get(position)[1])));
         float percentageChange = Float.parseFloat(mCollections.get(position)[2]);
         float rawAbsoluteChange = Float.parseFloat(mCollections.get(position)[3]);
 
         if (rawAbsoluteChange > 0) {
-            view.setTextViewCompoundDrawables(R.id.tv_change,
-                    R.drawable.percent_change_pill_green, 0, 0, 0);
+            view.setInt(R.id.tv_change, "setBackgroundResource",
+                    R.drawable.percent_change_pill_green);
         } else {
-            view.setTextViewCompoundDrawables(R.id.tv_change,
-                    R.drawable.percent_change_pill_red, 0, 0, 0);
+            view.setInt(R.id.tv_change, "setBackgroundResource",
+                    R.drawable.percent_change_pill_red);
         }
 
-        String change = dollarFormatWithPlus.format(rawAbsoluteChange);
-        String percentage = percentageFormat.format(percentageChange / 100);
-
-        if (PrefUtils.getDisplayMode(null)
-                .equals(context.getString(R.string.pref_display_mode_absolute_key))) {
+        String change = prefUtils.dollarFormatWithPlusFormat(rawAbsoluteChange);
+        String percentage = prefUtils.percentageFormatFormat(percentageChange / 100);
+        String displayMode = PrefUtils.getDisplayMode(null);
+        if (context.getString(R.string.pref_display_mode_absolute_key).equals(displayMode)) {
             view.setTextViewText(R.id.tv_change, change);
         } else {
             view.setTextViewText(R.id.tv_change, percentage);
@@ -136,5 +126,13 @@ class WidgetDataProvider implements RemoteViewsService.RemoteViewsFactory {
             mCollections.add(entry);
         }
         c.close();
+    }
+
+    public static void notifyDataSetChanged(Context c) {
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(c);
+        ComponentName theWidget = new ComponentName(c, WidgetProvider.class);
+        int[] allWidgetIds = appWidgetManager.getAppWidgetIds(theWidget);
+        appWidgetManager.notifyAppWidgetViewDataChanged(allWidgetIds,
+                R.id.lv_widget_content);
     }
 }

@@ -12,5 +12,7 @@
     <color name="decreasing_candle">#FFAA00</color>
     <color name="neutral_candle">#777777</color>
     <color name="shadow_candle">#AAAAAA</color>
+    <color name="color_widget_background">#77FFFFFF</color>
+    <color name="color_widget_list_background">#7700FFFF</color>
 
 </resources>

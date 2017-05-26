@@ -10,7 +10,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.CandleStickChart;
@@ -30,12 +29,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import timber.log.Timber;
+
 /**
  * Mark Benjamin 5/25/17.
  */
 
 public class DetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
-    private static final String TAG = "DetailActivity";
     private CandleStickChart mChart;
     private String mStock;
     private static final int HISTORY_LOADER = 42;
@@ -47,7 +47,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         TextView mChartLabel = (TextView) findViewById(R.id.tv_detail_chart_label);
         mChart = (CandleStickChart) findViewById(R.id.detail_chart);
 
-        mChartLabel.setText(R.string.default_stock_name);
+        mChartLabel.setText(R.string.default_stocks_symbol);
 
         Intent intentThatStartedThisActivity = getIntent();
 
@@ -85,7 +85,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         String[] data = csv.split(",");
         CandleEntry ret = new CandleEntry((float) ind, Float.parseFloat(data[2]),
                 Float.parseFloat(data[3]), Float.parseFloat(data[1]), Float.parseFloat(data[4]));
-        Log.d(TAG, "ind " + ret.getX() + ", high " + ret.getHigh() + ", low " + ret.getLow() +
+        Timber.d("ind " + ret.getX() + ", high " + ret.getHigh() + ", low " + ret.getLow() +
         ", open " + ret.getOpen() + ", close " + ret.getClose());
         return ret;
     }
@@ -114,7 +114,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         candleDataSet.setDecreasingPaintStyle(Paint.Style.FILL_AND_STROKE);
         CandleData candleData = new CandleData(candleDataSet);
         mChart.setData(candleData);
-        mChart.getDescription().setText("Candle Chart");
+        mChart.getDescription().setText(getString(R.string.candle_chart_description));
         mChart.setKeepPositionOnRotation(true);
         XAxis xAxis = mChart.getXAxis();
         xAxis.setValueFormatter(new IAxisValueFormatter(){
