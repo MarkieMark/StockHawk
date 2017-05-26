@@ -186,6 +186,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             PrefUtils.toggleDisplayMode(this);
             setDisplayModeMenuItemIcon(item);
             adapter.notifyDataSetChanged();
+            // TODO notify widgets of change
             return true;
         }
         return super.onOptionsItemSelected(item);

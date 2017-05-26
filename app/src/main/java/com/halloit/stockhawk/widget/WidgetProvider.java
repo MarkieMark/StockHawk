@@ -9,26 +9,16 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.widget.RemoteViews;
-import android.widget.Toast;
 import com.halloit.stockhawk.R;
+import com.halloit.stockhawk.ui.DetailActivity;
+
+import timber.log.Timber;
 
 /**
  * Mark Benjamin 5/24/17.
  */
 
 public class WidgetProvider extends AppWidgetProvider {
-
-    public static final String ACTION_TOAST = "com.halloit.mark.stockhawk.ACTION_TOAST";
-    public static final String EXTRA_STRING = "com.halloit.mark.stockhawk.EXTRA_STRING";
-
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        if (intent.getAction().equals(ACTION_TOAST)) {
-            Toast.makeText(context, intent.getExtras().getString(EXTRA_STRING),
-                    Toast.LENGTH_LONG).show();
-        }
-        super.onReceive(context, intent);
-    }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
@@ -44,10 +34,8 @@ public class WidgetProvider extends AppWidgetProvider {
             view.setRemoteAdapter(appWidgetId, R.id.lv_widget_content, intent);
 
             // set clickability
-            final Intent onItemClickIntent = new Intent(context, WidgetProvider.class);
-            onItemClickIntent.setAction(ACTION_TOAST);
-            onItemClickIntent.setData(Uri.parse(onItemClickIntent.toUri(Intent.URI_INTENT_SCHEME)));
-            final PendingIntent onClickPendingIntent = PendingIntent.getBroadcast(context, 0,
+            final Intent onItemClickIntent = new Intent(context, DetailActivity.class);
+            final PendingIntent onClickPendingIntent = PendingIntent.getActivity(context, 0,
                     onItemClickIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             view.setPendingIntentTemplate(R.id.lv_widget_content, onClickPendingIntent);
 
@@ -55,6 +43,5 @@ public class WidgetProvider extends AppWidgetProvider {
         }
         super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
-
 
 }

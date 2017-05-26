@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_widget_list_item_content"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingLeft="@dimen/widget_margin"
+    android:paddingRight="@dimen/widget_margin"
+    android:paddingTop="@dimen/widget_content_margin"
+    android:paddingBottom="@dimen/widget_content_margin">
+
+    <TextView
+        android:id="@+id/tv_symbol"
+        style="@style/StockSymbolTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="start|center_vertical"
+        tools:text="GOOG" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="end">
+
+        <TextView
+            android:id="@+id/tv_price"
+            style="@style/BidPriceTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/widget_margin"
+            tools:text="1000.00" />
+
+        <TextView
+            android:id="@+id/tv_change"
+            style="@style/PercentChangeTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/percent_change_pill_green"
+            android:paddingLeft="@dimen/widget_minimal_margin"
+            android:paddingRight="@dimen/widget_minimal_margin"
+            tools:text="100%" />
+    </LinearLayout>
+</LinearLayout>

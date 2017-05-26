@@ -11,11 +11,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 public final class PrefUtils {
+    private static Context c;
 
     private PrefUtils() {
     }
 
     public static Set<String> getStocks(Context context) {
+        c = context;
         String stocksKey = context.getString(R.string.pref_stocks_key);
         String initializedKey = context.getString(R.string.pref_stocks_initialized_key);
         String[] defaultStocksList = context.getResources().getStringArray(R.array.default_stocks);
@@ -38,6 +40,7 @@ public final class PrefUtils {
     }
 
     private static void editStockPref(Context context, String symbol, Boolean add) {
+        c = context;
         String key = context.getString(R.string.pref_stocks_key);
         Set<String> stocks = getStocks(context);
 
@@ -54,14 +57,17 @@ public final class PrefUtils {
     }
 
     public static void addStock(Context context, String symbol) {
+        c = context;
         editStockPref(context, symbol, true);
     }
 
     public static void removeStock(Context context, String symbol) {
+        c = context;
         editStockPref(context, symbol, false);
     }
 
     public static String getDisplayMode(Context context) {
+        if (context == null) context = c;
         String key = context.getString(R.string.pref_display_mode_key);
         String defaultValue = context.getString(R.string.pref_display_mode_default);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -69,6 +75,7 @@ public final class PrefUtils {
     }
 
     public static void toggleDisplayMode(Context context) {
+        c = context;
         String key = context.getString(R.string.pref_display_mode_key);
         String absoluteKey = context.getString(R.string.pref_display_mode_absolute_key);
         String percentageKey = context.getString(R.string.pref_display_mode_percentage_key);
@@ -84,8 +91,6 @@ public final class PrefUtils {
         } else {
             editor.putString(key, absoluteKey);
         }
-
         editor.apply();
     }
-
 }

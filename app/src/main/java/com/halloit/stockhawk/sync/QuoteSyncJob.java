@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 import com.halloit.stockhawk.data.Contract;
 import com.halloit.stockhawk.data.PrefUtils;
 import com.halloit.stockhawk.mock.MockUtils;
+import com.halloit.stockhawk.widget.UpdateWidgetService;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -117,6 +119,8 @@ public final class QuoteSyncJob {
 
                     quoteCVs.add(quoteCV);
                 } catch (Exception E) {
+                    E.printStackTrace();
+                    Timber.d(E.toString());
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
@@ -125,7 +129,7 @@ public final class QuoteSyncJob {
                                     Toast.LENGTH_LONG).show();
                         }
                     });
-                    E.printStackTrace();
+
                 }
             }
             Timber.d("quoteCVs length " + quoteCVs.size());
@@ -137,7 +141,9 @@ public final class QuoteSyncJob {
             Timber.d("bulkInsert " + n);
             Intent dataUpdatedIntent = new Intent(ACTION_DATA_UPDATED);
             context.sendBroadcast(dataUpdatedIntent);
-            // update widgets too
+            // TODO update widgets too
+//            Intent updateWidgetIntent = new Intent(context, UpdateWidgetService.class);
+//            context.startService(updateWidgetIntent);
 
         } catch (IOException exception) {
             Timber.e(exception, "Error fetching stock quotes");
